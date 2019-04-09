@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="layui/css/layui.css" />
+		<link rel="stylesheet" href="layui/css/modules/layer/default/layer.css" />
+	</head>
+	<body>
+<link rel="stylesheet" href="layui/css/layui.css" />
+<link rel="stylesheet" href="layui/css/modules/layer/default/layer.css" />
+<style>
+	.layui-form-checkbox{
+		margin-top: 5%;
+	}
+</style>
+<form class="layui-form" id="system">
+	<div class="layui-input-block" style="margin-top: 10%;margin-left: 10%;">
+	<input style="width: 30px;margin-top: 5%;" name="wap" type="checkbox" id="tag45" value="WAP端">
+	<div class="layui-unselect layui-form-checkbox" lay-skin=""><i class="layui-icon"></i></div>WAP端<br>
+	<input style="width: 30px;margin-top: 5%;" name="wechat" type="checkbox" id="tag48" value="微信">
+	<div class="layui-unselect layui-form-checkbox" lay-skin=""><i class="layui-icon"></i></div>微信<br>
+	<input style="width: 30px;margin-top: 5%;" name="app" type="checkbox" id="tag50" value="APP">
+	<div class="layui-unselect layui-form-checkbox" lay-skin=""><i class="layui-icon"></i></div>APP<br>
+	<input style="width: 30px;margin-top: 5%;" name="pc" type="checkbox" id="tag57" value="pc端">
+	<div class="layui-unselect layui-form-checkbox" lay-skin=""><i class="layui-icon"></i></div>pc端<br>
+	<input style="width: 30px;margin-top: 5%;" name="FEN" type="checkbox" id="tag64" value="分公司PC端">
+	<div class="layui-unselect layui-form-checkbox" lay-skin=""><i class="layui-icon"></i></div>分公司PC端<br>
+	<input style="width: 30px;margin-top: 5%;" name="FEN_WAP" type="checkbox" id="tag67" value="分公司wap端">
+	<div class="layui-unselect layui-form-checkbox" lay-skin=""><i class="layui-icon"></i></div>分公司wap端<br>
+	</div>
+	<div style="display: none;">
+		<button class="layui-btn" lay-submit="" lay-filter="system" id="submitSys">提交</button>
+	</div>
+</form>
+</body>
+</html>
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript" src="layui/layui.js" ></script>
+<script type="text/javascript" src="layui/lay/modules/layer.js" ></script>
+<script>
+/* 表单渲染 */
+var flag = false;	// 阻塞标识，防止数据还未完全加载就执行selectTag方法导致报错，并且不选中已选择的终端标签
+layui.use('form', function(){
+	var form = layui.form;
+	form.on('submit(system)', function(data){
+		var systems = data.field;	// 所有选中的数据
+		// 调用父页面方法，数据传输到父页面
+		parent.getSystem(systems);
+		var index = parent.layer.getFrameIndex(window.name);
+		parent.layer.close(index);
+		return false;
+	});
+});
+
+
+//模拟点击事件触发表订单提交
+function submitSys(){
+	$("#submitSys").trigger("click");
+}
+
+// 初次进来页面，选择父页面已选择的标签
+function selectTag(values){
+	var inputs = $(".layui-input-block input");	// 获取所有input
+	if(inputs.length == 0){	// 如果标签还没加载出来重新调用自己
+		selectTag(values);
+	}else{
+		for (var i = 0; i < values.length; i++) {
+			$("input[name='" + values[i] + "']").attr("checked","");
+		}
+		layui.use('form', function(){
+			var form = layui.form;
+			//	表单样式更改后重新渲染
+			form.render();
+		});
+	}
+}
+</script>
